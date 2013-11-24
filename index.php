@@ -24,6 +24,12 @@ switch($_SERVER['REQUEST_METHOD']) {
 }
 
 function save_article($article) {
+    $password = $_POST["password"];
+
+    if (sha1($password) !== 'd99aa2f4f7fd6925f83d0d7732648b53b6c5fe67') {
+        die_with_error("Tried to save the article but couldn't authenticate properly :(");
+    }
+
     $markdown = $_POST["article-markdown"];
     $result = file_put_contents('articles-md/0.md', $markdown);
 
@@ -82,6 +88,7 @@ function edit_article($article) {
 <body>
     <form action="?article=main" method="post">
         <p><textarea name="article-markdown" rows="20" cols="80"><?php echo $markdown; ?></textarea></p>
+        <p>Password: <input name="password" type="password"></p>
         <p><input type="submit" value="Save"></p>
     </form>
 </body>
