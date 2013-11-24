@@ -6,8 +6,53 @@ spl_autoload_register(function($class){
 
 use \Michelf\Markdown;
 
-$text = file_get_contents('articles-md/0.md');
-$html = Markdown::defaultTransform($text);
+$article = 'main';
+
+switch($_SERVER['REQUEST_METHOD']) {
+    case 'POST':
+    case 'PUT':
+        save_article($article);
+        break;
+    case 'GET':
+        if (isset($_GET["edit"])) {
+            edit_article($article);
+        }
+        else {
+            show_article($article);
+        }
+        break;
+}
+
+function save_article($article) {
+    $markdown = $_POST["article-markdown"];
+    $result = file_put_contents('articles-md/0.md', $markdown);
+
+    if ($result === FALSE) {
+        show_error("Tried to save the article but couldn't write to the file :(");
+    }
+    else {
+        header('Location: /carl/wiki/');
+        exit;
+    }
+}
+
+function show_error($error) {
+
+?>
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>There was an error</title>
+</head>
+<body>
+    <?php echo $error ?>
+</body>
+<?php
+}
+
+function show_article($article) {
+    $markdown = file_get_contents('articles-md/0.md');
+    $html = Markdown::defaultTransform($markdown);
 
 ?>
 <!DOCTYPE html>
@@ -20,3 +65,23 @@ $html = Markdown::defaultTransform($text);
         echo $html;
     ?>
 </body>
+<?php
+}
+
+function edit_article($article) {
+    $markdown = file_get_contents('articles-md/0.md');
+
+?>
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <title>Editing "Carl Mäsak"</title>
+</head>
+<body>
+    <form action="?article=main" method="post">
+        <p><textarea name="article-markdown" rows="20" cols="80"><?php echo $markdown; ?></textarea></p>
+        <p><input type="submit" value="Save"></p>
+    </form>
+</body>
+<?php
+}
