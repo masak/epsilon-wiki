@@ -48,6 +48,7 @@ function die_with_error($error) {
     <?php echo $error ?>
 </body>
 <?php
+    exit;
 }
 
 function show_article($article) {
@@ -66,6 +67,7 @@ function show_article($article) {
     ?>
 </body>
 <?php
+    exit;
 }
 
 function edit_article($article) {
@@ -84,4 +86,5 @@ function edit_article($article) {
     </form>
 </body>
 <?php
+    exit;
 }
