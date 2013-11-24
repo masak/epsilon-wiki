@@ -28,7 +28,7 @@ function save_article($article) {
     $result = file_put_contents('articles-md/0.md', $markdown);
 
     if ($result === FALSE) {
-        show_error("Tried to save the article but couldn't write to the file :(");
+        die_with_error("Tried to save the article but couldn't write to the file :(");
     }
     else {
         header('Location: /carl/wiki/');
@@ -36,7 +36,7 @@ function save_article($article) {
     }
 }
 
-function show_error($error) {
+function die_with_error($error) {
 
 ?>
 <!DOCTYPE html>
